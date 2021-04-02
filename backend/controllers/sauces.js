@@ -1,10 +1,12 @@
 const Sauce = require('../models/Sauce');
+
+// NOTE: Package fs pour la gestion de fichiers (images en l'occurence)
 const fs = require('fs');
 
 
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
-  // suppr de l'id généré automatiquement par MongoDB
+  // NOTE: suppression de l'id généré automatiquement par MongoDB
   delete sauceObject._id;
   const sauce = new Sauce({
     ...sauceObject,
@@ -24,6 +26,8 @@ exports.getOneSauce = (req, res, next) => {
 };
 
 exports.modifySauce = (req, res, next) => {
+  // NOTE: Création d'un objet qui regarde si req.file existe ou non. S'il existe, on traite la nouvelle image ; s'il n'existe pas, on traite simplement l'objet entrant
+  // NOTE: L'opérateur spread ... est utilisé pour faire une copie de tous les éléments de req.body
   const sauceObject = req.file ?
     {
       ...JSON.parse(req.body.sauce),
@@ -38,6 +42,7 @@ exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
       const filename = sauce.imageUrl.split('/images/')[1];
+        // NOTE: fs.unlink pour supprimer l'image de la sauce du serveur
       fs.unlink(`images/${filename}`, () => {
         Sauce.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
@@ -85,13 +90,13 @@ exports.likeSauce = (req, res, next) => {
         .catch((error) => { res.status(404).json({ error: error }); });
     }
   }
-  // Si je like
+  // Si je like, on ajoute l'userId dans l'array "usersLiked" et on incrémente le nombre total de likes
   likeAction(req.body.like === 1, { $push: { usersLiked: req.body.userId }, $inc: { likes: +1 } }, { message: 'Like ajouté !' });
 
-  // Si je dislike
+  // Si je dislike on ajoute l'userId dans l'array "usersDisliked" et on incrémente le nombre total de dislikes
   likeAction(req.body.like === -1, { $push: { usersDisliked: req.body.userId }, $inc: { dislikes: +1 } }, { message: 'Dislike ajouté !' });
 
-  // Si j'annule le like ou dislike
+  // Si j'annule le like ou dislike, on supprime l'userId de l'array "usersLiked" ou "usersDisLiked" et on décrémente le nombre total de likes/dislikes
   likeAction0(req.body.like === 0);
 
 };
