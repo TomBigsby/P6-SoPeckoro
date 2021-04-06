@@ -12,6 +12,7 @@ L'application permet aux utilisateurs d'ajouter des sauces et donne la possibili
 - Modifier ou supprimer des sauces (uniquement celles créées par l'utilisateur)
 - Liker ou disliker les sauces
 
+
 **Exigences concernant la sécurité** :
 - l’API doit respecter le RGPD et les standards OWASP
 - le mot de passe des utilisateurs doit être chiffré
@@ -35,6 +36,7 @@ npm install
 ng serve
 ```
 puis se rendre à l'adresse `http://localhost:4200`
+
 
 
 **Partie Backend :**

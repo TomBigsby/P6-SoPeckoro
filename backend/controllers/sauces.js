@@ -3,7 +3,6 @@ const Sauce = require('../models/Sauce');
 // NOTE: Package fs pour la gestion de fichiers (images en l'occurence)
 const fs = require('fs');
 
-
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   // NOTE: suppression de l'id généré automatiquement par MongoDB

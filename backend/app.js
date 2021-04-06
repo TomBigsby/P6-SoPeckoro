@@ -7,12 +7,11 @@ require('dotenv').config()
 
 const saucesRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
-// const Sauce = require('./models/Sauce');
 
 const app = express();
 
 
-mongoose.connect(process.env.DB_ID_PASS, {
+mongoose.connect(process.env.DB_ID_PASS, { 
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
